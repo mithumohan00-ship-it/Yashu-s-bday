@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Cinematic Birthday Surprise | For Yashuu_🐼</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #ff2d55;
+            --accent-glow: rgba(255, 45, 85, 0.5);
+            --gold: #d4af37;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --bg-dark: #0a0a0b;
+            --royal-red: #6e0000;
+        }
+
+        html, body { 
+            margin: 0; padding: 0; overflow-x: hidden; width: 100%; height: 100%; 
+            background-color: var(--bg-dark); font-family: 'Montserrat', sans-serif; color: white; 
+        }
+        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+
+        .page { 
+            position: absolute; top: 0; left: 0; width: 100vw; min-height: 100vh; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            padding: 20px; text-align: center; visibility: hidden; opacity: 0; 
+            transform: scale(1.1); transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            z-index: 1; overflow: hidden; 
+        }
+        .page.active { visibility: visible; opacity: 1; transform: scale(1); z-index: 10; }
+
+        /* Hero Page */
+        #hero-page { 
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('00.png') no-repeat center center; 
+            background-size: cover; 
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 8vw, 5.5rem);
+            font-weight: 900; font-style: italic; background: linear-gradient(to right, #fff, #ff2d55, #fff);
+            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shine 4s linear infinite;
+        }
+        @keyframes shine { to { background-position: 200% center; } }
+
+        .btn-neon { 
+            padding: 18px 45px; font-size: 1.1rem; font-weight: 600; color: white; 
+            background: transparent; border: 1px solid var(--accent); border-radius: 50px; 
+            cursor: pointer; text-transform: uppercase; letter-spacing: 2px; 
+            transition: 0.5s; box-shadow: 0 0 10px var(--accent-glow); 
+            position: relative; z-index: 15;
+        }
+        .btn-neon:hover { background: var(--accent); box-shadow: 0 0 50px var(--accent); }
+
+        /* Gallery Grid */
+        #gallery-page { display: block; overflow-y: auto; background: #050505; padding-top: 100px; }
+        .gallery-grid { column-count: 3; column-gap: 20px; max-width: 1400px; margin: 0 auto; padding: 20px; }
+        @media (max-width: 900px) { .gallery-grid { column-count: 2; } }
+        @media (max-width: 600px) { .gallery-grid { column-count: 1; } }
+
+        .memory-card { 
+            break-inside: avoid; margin-bottom: 20px; border-radius: 15px; 
+            overflow: hidden; position: relative; border: 1px solid var(--glass-border); 
+            background: var(--glass); transition: 0.5s; cursor: pointer;
+        }
+        
+        .memory-image { width: 100%; height: auto; display: block; transition: 0.5s; }
+        .memory-card:hover .memory-image { transform: scale(1.05); }
+
+        /* FIXED: Hover Overlay Logic */
+        .memory-hover-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+            display: flex; align-items: flex-end; justify-content: center;
+            opacity: 0; transition: opacity 0.4s ease;
+            padding-bottom: 20px; pointer-events: none; /* Allows hover through the div */
+            z-index: 2;
+        }
+        
+        .memory-card:hover .memory-hover-overlay { opacity: 1; }
+        
+        .hover-message { 
+            font-family: 'Dancing Script', cursive; font-size: 1.6rem; color: #fff; 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8); transform: translateY(10px);
+            transition: transform 0.4s ease;
+        }
+        .memory-card:hover .hover-message { transform: translateY(0); }
+
+        /* Secret Message Zone */
+        .secret-unlock-zone { margin: 80px auto; padding: 40px; border-radius: 30px; background: rgba(255, 45, 85, 0.03); border: 1px dashed var(--accent); max-width: 600px; width: 90%; text-align: center; }
+        #unlock-progress { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent); transform: scaleX(0); transform-origin: left; opacity: 0.3; transition: transform 2s linear; pointer-events: none; }
+        #secret-content-hidden { display: none; font-family: 'Dancing Script'; font-size: 1.8rem; color: #fff; animation: fadeIn 1s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Curtain Styles */
+        .curtain-panel { position: absolute; top: 0; width: 51%; height: 100%; background: repeating-linear-gradient(to right, var(--royal-red), #4a0000 10%); z-index: 20; transition: transform 2.5s ease; box-shadow: inset 0 0 100px rgba(0,0,0,0.8); }
+        .curtain-left { left: 0; border-right: 2px solid var(--gold); }
+        .curtain-right { right: 0; border-left: 2px solid var(--gold); }
+        .open .curtain-left { transform: translateX(-100%); }
+        .open .curtain-right { transform: translateX(100%); }
+
+        /* Music Control */
+        .music-control {
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            background: var(--glass); border: 1px solid var(--glass-border);
+            padding: 10px; border-radius: 50%; cursor: pointer; backdrop-filter: blur(10px);
+            display: none; transition: 0.3s;
+        }
+        .music-control.visible { display: block; }
+        
+        footer { padding: 40px; text-align: center; border-top: 1px solid var(--glass-border); color: rgba(255,255,255,0.4); font-size: 0.8rem; letter-spacing: 2px; background: #000; }
+    </style>
+</head>
+
+<body>
+
+    <div class="music-control" id="music-btn" onclick="toggleMusic()">
+        <span id="music-icon">🔇</span>
+    </div>
+
+    <section id="hero-page" class="page active">
+        <h1 class="hero-title">Happy Birthday, Yashuu</h1>
+        <p style="opacity: 0.8; letter-spacing: 4px; text-transform: uppercase; margin-top: 10px;">A Cinematic Journey For You</p>
+        <button class="btn-neon" onclick="transitionTo('message-slider-page')" style="margin-top: 30px;">Open Your Gift</button>
+    </section>
+
+    <section id="message-slider-page" class="page">
+        <div style="background:var(--glass); padding:50px; border-radius:30px; backdrop-filter:blur(10px); border:1px solid var(--glass-border);">
+            <h2 style="font-family:'Playfair Display'; font-size: 1.8rem; margin-bottom: 30px;">Every moment with you is a gift...</h2>
+            <button class="btn-neon" onclick="transitionTo('celebration-page')">Continue</button>
+        </div>
+    </section>
+
+    <section id="celebration-page" class="page">
+        <h2 style="margin-bottom: 30px;">The Stage is Set...</h2>
+        <button class="btn-neon" onclick="startCelebration()">💡 Let's Glow</button>
+    </section>
+
+    <section id="curtain-page" class="page" style="padding:0;">
+        <div class="stage" id="stage" style="width:100%; height:100%; position:relative; overflow:hidden;">
+            <div class="curtain-panel curtain-left"></div>
+            <div class="curtain-panel curtain-right"></div>
+            <div style="height:100%; display:flex; align-items:center; justify-content:center; position:relative; z-index: 15;">
+                <div style="background:var(--glass); padding:40px; border-radius:20px; backdrop-filter:blur(10px); max-width: 500px; border:1px solid var(--glass-border);">
+                    <h2 style="font-family:'Dancing Script'; font-size: 2.5rem; color: var(--accent);">My Dearest Yashu</h2>
+                    <p style="margin: 20px 0; line-height: 1.6;">the way you look at me is the way i look at you. Care you, Respect you, Protect you, and Prioritise you.</p>
+                    <button class="btn-neon" onclick="transitionTo('gallery-page')">Gallery</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery-page" class="page">
+        <h2 style="font-family:'Playfair Display'; font-size: 3rem; margin-bottom: 40px;">20 Chapters of U</h2>
+        <div class="gallery-grid" id="gallery-grid"></div>
+
+        <div class="secret-unlock-zone">
+            <div id="unlock-prompt">
+                <p style="margin-bottom: 20px; color: var(--accent);">A FINAL SECRET HIDDEN HERE</p>
+                <button id="hold-to-unlock" class="btn-neon">
+                    <div id="unlock-progress"></div>
+                    Hold for 2s to Unlock
+                </button>
+            </div>
+            <div id="secret-content-hidden">
+                "Maybe we shouldn't try again. 
+                Maybe our story was only beautiful because it ended exactly when it did. 
+                Maybe second chances are illusions we chase because goodbyes hurt too much. 
+                But what if we're wrong? 
+                What if real love only truly begins after it breaks? 
+                What if every tear, every mistake, every painful goodbye was simply preparing us to appreciate the sweetness of finally getting it right? 
+                Therefore, let's rewrite this story, but this time, let's choose each other fiercely, hold tighter, and love deeper. 
+                Because perhaps, love's greatest beauty is revealed only after we've felt the emptiness of losing it. 
+                Have you felt this way? 
+                
+                Happy Birthday, Yashu! ❤️"
+            </div>
+        </div>
+
+        <button class="btn-neon" onclick="location.reload()" style="margin-bottom: 100px;">Restart Magic</button>
+        
+        <footer>DESIGNED AND DEVELOPED BY MITHU MOHAN</footer>
+    </section>
+
+    <audio id="birthday-audio" loop><source src="munjane.mp3" type="audio/mpeg"></audio>
+
+    <script>
+        const audio = document.getElementById('birthday-audio');
+        const musicBtn = document.getElementById('music-btn');
+
+        function transitionTo(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(id === 'curtain-page') setTimeout(() => document.getElementById('stage').classList.add('open'), 1000);
+            if(id === 'gallery-page') loadGallery();
+        }
+
+        function startCelebration() {
+            audio.play().catch(() => {});
+            musicBtn.classList.add('visible');
+            transitionTo('curtain-page');
+        }
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                document.getElementById('music-icon').innerText = "🔊";
+            } else {
+                audio.pause();
+                document.getElementById('music-icon').innerText = "🔇";
+            }
+        }
+
+        function loadGallery() {
+            const grid = document.getElementById('gallery-grid');
+            if(grid.children.length > 0) return;
+            const msgs = ["Your Smile ✨", "Pure Grace", "The Main Character", "Best View", "Radiant Soul", "Magic in Eyes", "Forever Favorite", "Golden Hour", "Elegance", "Happy Vibes", "Special Moment", "Dreamy ✨", "Iconic", "Unstoppable", "Heart Thief", "The Glow Up", "Perfect 10", "So Pookie", "Vibe Check", "Queen Energy", "Always & Forever ❤️"];
+            for(let i=1; i<=21; i++) {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.innerHTML = `
+                    <img src="${i}.png" class="memory-image">
+                    <div class="memory-hover-overlay">
+                        <p class="hover-message">${msgs[(i-1) % msgs.length]}</p>
+                    </div>`;
+                grid.appendChild(card);
+            }
+        }
+
+        // Secret Unlock Logic
+        const unlockBtn = document.getElementById('hold-to-unlock');
+        const progress = document.getElementById('unlock-progress');
+        let timer;
+        function startHold() {
+            progress.style.transform = 'scaleX(1)';
+            timer = setTimeout(() => {
+                document.getElementById('unlock-prompt').style.display = 'none';
+                document.getElementById('secret-content-hidden').style.display = 'block';
+            }, 2000);
+        }
+        function endHold() { clearTimeout(timer); progress.style.transform = 'scaleX(0)'; }
+        
+        unlockBtn.addEventListener('mousedown', startHold); 
+        unlockBtn.addEventListener('mouseup', endHold);
+        unlockBtn.addEventListener('mouseleave', endHold);
+        unlockBtn.addEventListener('touchstart', startHold); 
+        unlockBtn.addEventListener('touchend', endHold);
+    </script>
+</body>
+</html>
